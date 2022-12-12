@@ -91,7 +91,7 @@ class Board extends React.Component {
     }
 
 render() {
-    const status = this.props.isGameDone?'AND THE WINNER IS... PLAYER':`Player's move: ${this.state.isTurnForX?'X':'O'}`;
+    const status = this.props.isGameDone?'AND THE WINNER IS...':`Player's move: ${this.state.isTurnForX?'X':'O'}`;
 
     return (
     <div>
@@ -130,6 +130,7 @@ class Game extends React.Component {
         this.state = {
             isGameDone: false,
             winner: null,
+            turns: 0,
         };
         this.boardElement = React.createRef();
     }
@@ -137,12 +138,23 @@ class Game extends React.Component {
     searchForWin(squareIndexes, turnFor) {        
         const isAWin = checkingForWinner(squareIndexes, this.winningCombinations, turnFor)// returns tuple with with first value that shows if player that have done a trun just won, and second value with this player symbol
 
+        this.setState({turns: this.state.turns + 1})
+        console.log(this.state.turns);
+
         if (isAWin[0]) {
             this.setState({
                 isGameDone: true,
                 winner: isAWin[1],
             })
+        } else if (this.state.turns === 8) {
+            this.setState({
+                isGameDone: true,
+                winner: 'draw',
+            })
+        } else if (this.state.turns > 9){
+            throw Error('Something absolutelly wrong with this code')
         }
+
     }
 
 render() {
@@ -156,7 +168,7 @@ render() {
         />
         </div>
         <div className="game-info">
-        <div style={{marginLeft: '-10px', display: 'inline'}}>{this.state.winner}</div>
+        <div style={{marginLeft: '-10px', display: 'inline'}}>{(this.state.winner==='draw')?"Oh... It's a draw":`PLAYER ${this.state.winner}`}</div>
         <div 
             style={{display: this.state.isGameDone?'inline':'none',  marginLeft: '20px', border: 'thick double ', cursor: 'pointer', padding:'5px' }}
             onClick={() => {
@@ -164,13 +176,14 @@ render() {
                 this.setState({
                     isGameDone: false,
                     winner: null,
+                    turns: 0,
                 })
             }}
         >
             NEW GAME
         </div>
         
-        <ol>{/*TODO*/}</ol>
+        <ol>{this.state.turns}</ol>
         </div>
     </div>
     );
