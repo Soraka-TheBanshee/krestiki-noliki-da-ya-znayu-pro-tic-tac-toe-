@@ -4,12 +4,6 @@ import './index.css';
 import { searchingForWinner as checkingForWinner } from './modules';
 
 class Square extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: null,
-        };
-    }
     render() {
       return (
         <button 
@@ -151,7 +145,7 @@ class Game extends React.Component {
                 isGameDone: true,
                 winner: 'draw',
             })
-        } else if (this.state.turns > 9){
+        } else if (this.state.turns > 8){
             throw Error('Something absolutelly wrong with this code')
         }
 
